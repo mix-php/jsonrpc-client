@@ -29,7 +29,7 @@ var_dump($ret);
 
 ### 协程调用
 
-在 Mix PHP 的常驻协程模式中使用，可并行获取多个请求结果，性能是传统框架的同步方式无法比拟的，这种方法使用简单，因为是短连接，所以在并发极高时会导致 TIME_WAIT 较高，使用连接池则没有这个问题。
+在 Mix PHP 的常驻协程模式中使用，可并行获取多个请求结果，性能是传统框架的同步方式无法比拟的，这种方法使用简单，但是因为是短连接，所以在并发极高时会导致 TIME_WAIT 较高，使用连接池则没有这个问题。
 
 ```
 $chan1 = new \Mix\Core\Coroutine\Channel();
@@ -42,8 +42,12 @@ xgo(function () use ($chan1) {
     $method = 'hello.world';
     $params = [];
     $id     = 0;
-    $ret    = $client->call($method, $params, $id);
-    $chan1->push($ret);
+    try {
+        $ret = $client->call($method, $params, $id);
+        $chan1->push($ret);
+    } catch (\Throwable $e) {
+        $chan1->push(null);
+    }
 });
 $chan2 = new \Mix\Core\Coroutine\Channel();
 xgo(function () use ($chan2) {
@@ -55,8 +59,12 @@ xgo(function () use ($chan2) {
     $method = 'hello.world';
     $params = [];
     $id     = 0;
-    $ret    = $client->call($method, $params, $id);
-    $chan2->push($ret);
+    try {
+        $ret = $client->call($method, $params, $id);
+        $chan2->push($ret);
+    } catch (\Throwable $e) {
+        $chan2->push(null);
+    }
 });
 list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
 // 可对两次请求的结果做计算并发送给客户端
@@ -164,26 +172,33 @@ class JsonRpcTcpClientDialer implements DialerInterface
 ```
 $chan1 = new \Mix\Core\Coroutine\Channel();
 xgo(function () use ($chan1) {
-    $rpc     = app()->rpcPool->getConnection();
+    $rpc    = app()->rpcPool->getConnection();
     $method = 'hello.world';
     $params = [];
     $id     = 0;
-    $ret    = $rpc->call($method, $params, $id);
-    $rpc->release(); // 不手动释放的连接不会归还连接池，会在析构时丢弃
-    $chan1->push($ret);
+    try {
+        $ret = $rpc->call($method, $params, $id);
+        $rpc->release(); // 不手动释放的连接不会归还连接池，会在析构时丢弃
+        $chan1->push($ret);
+    } catch (\Throwable $e) {
+        $chan1->push(null);
+    }
 });
 $chan2 = new \Mix\Core\Coroutine\Channel();
 xgo(function () use ($chan2) {
-    $rpc     = app()->rpcPool->getConnection();
+    $rpc    = app()->rpcPool->getConnection();
     $method = 'hello.world';
     $params = [];
     $id     = 0;
-    $ret    = $rpc->call($method, $params, $id);
-    $rpc->release(); // 不手动释放的连接不会归还连接池，会在析构时丢弃
-    $chan2->push($ret);
+    try {
+        $ret = $rpc->call($method, $params, $id);
+        $rpc->release(); // 不手动释放的连接不会归还连接池，会在析构时丢弃
+        $chan2->push($ret);
+    } catch (\Throwable $e) {
+        $chan2->push(null);
+    }
 });
 list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
-return json_encode([$ret1, $ret2]);
 // 可对两次请求的结果做计算并发送给客户端
 ```
 
