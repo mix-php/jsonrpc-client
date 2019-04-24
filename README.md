@@ -1,4 +1,6 @@
-## mix/jsonrpc-client
+## JsonRpcTcpClient
+
+Mix PHP 本身提供了基于 TCP 协议的 RPC 服务器开发，这里是 RPC 的客户端，负责与服务器通信。
 
 ### 安装
 
@@ -60,9 +62,9 @@ list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
 // 可对两次请求的结果做计算并发送给客户端
 ```
 
-连接池：
+连接池使用：
 
-与 Database/Redis 池使用方法一至，首先在依赖配置中配置依赖：
+与 Mix PHP 内置的 Database/Redis 池使用方法一至，首先在依赖配置中配置依赖：
 
 ```
 // 连接池
@@ -151,3 +153,7 @@ $id     = 0;
 $ret    = $rpc->call($method, $params, $id);
 $db->release(); // 不手动释放的连接不会归还连接池，会在析构时丢弃
 ```
+
+## License
+
+Apache License Version 2.0, http://www.apache.org/licenses/
