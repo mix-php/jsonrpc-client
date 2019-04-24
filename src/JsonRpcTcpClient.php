@@ -3,6 +3,8 @@
 namespace Mix\JsonRpc\Client;
 
 use Mix\JsonRpc\Client\Exception\ConnectionException;
+use Mix\JsonRpc\Client\Exception\ReadException;
+use Mix\JsonRpc\Client\Exception\WriteException;
 
 /**
  * Class JsonRpcTcpClient
@@ -85,12 +87,12 @@ class JsonRpcTcpClient
                 'id'     => $id,
             ]) . "\n");
         if ($ret === false) {
-            return false;
+            throw new WriteException('JsonRpcTcpClient write failed.');
         }
         stream_set_timeout($this->connection, $this->timeout);
         $line = fgets($this->connection);
         if ($line === false) {
-            return false;
+            throw new ReadException('JsonRpcTcpClient read failed.');
         }
         return json_decode($line, true);
     }
