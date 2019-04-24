@@ -10,7 +10,7 @@ Mix PHP 本身提供了基于 TCP 协议的 RPC 服务器开发，这里是 RPC 
 composer require mix/jsonrpc-client
 ```
 
-传统调用：
+### 传统调用
 
 在 TP/Yii/Laravel 等传统框架也可使用。
 
@@ -27,7 +27,7 @@ $ret    = $client->call($method, $params, $id);
 var_dump($ret);
 ```
 
-协程使用：
+### 协程调用
 
 在 Mix PHP 中使用，可并行获取多个请求结果，性能是传统框架的同步方式无法比拟的。
 
@@ -62,7 +62,7 @@ list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
 // 可对两次请求的结果做计算并发送给客户端
 ```
 
-连接池使用：
+### 连接池调用
 
 与 Mix PHP 内置的 Database/Redis 池使用方法一至，首先在依赖配置中配置依赖：
 
