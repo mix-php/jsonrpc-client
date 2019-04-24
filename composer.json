@@ -20,7 +20,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Mix\\JsonRpc\\Client": "src/"
+      "Mix\\JsonRpc\\Client\\": "src/"
     }
   }
 }
