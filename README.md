@@ -103,7 +103,7 @@ list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
 
 增加 IDE 提示：
 
-修改 `ApplicationInterface.php` 增加注释：
+修改 `ApplicationInterface.php` 增加注释。
 
 ```
 @property \Mix\JsonRpc\Client\Pool\ConnectionPool $rpcPool
