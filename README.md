@@ -12,7 +12,7 @@ composer require mix/jsonrpc-client
 
 ### 传统调用
 
-在 TP/Yii/Laravel 等传统框架也可使用。
+在 Mix PHP 的常驻同步模式中使用，也可在 TP/Yii/Laravel 等传统框架中使用。
 
 ```
 $client = new \Mix\JsonRpc\Client\Compatible\JsonRpcTcpClient([
@@ -29,7 +29,7 @@ var_dump($ret);
 
 ### 协程调用
 
-在 Mix PHP 中使用，可并行获取多个请求结果，性能是传统框架的同步方式无法比拟的。
+在 Mix PHP 的常驻协程模式中使用，可并行获取多个请求结果，性能是传统框架的同步方式无法比拟的，这种方法使用简单，因为是短连接，所以在并发极高时会导致 TIME_WAIT 较高，使用连接池则没有这个问题。
 
 ```
 $chan1 = new \Mix\Core\Coroutine\Channel();
