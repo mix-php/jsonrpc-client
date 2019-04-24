@@ -151,7 +151,7 @@ $method = 'hello.world';
 $params = [];
 $id     = 0;
 $ret    = $rpc->call($method, $params, $id);
-$db->release(); // 不手动释放的连接不会归还连接池，会在析构时丢弃
+$rpc->release(); // 不手动释放的连接不会归还连接池，会在析构时丢弃
 ```
 
 ## License
