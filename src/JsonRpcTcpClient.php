@@ -77,7 +77,7 @@ class JsonRpcTcpClient
      * @param $method
      * @param $params
      * @param int $id
-     * @return bool|array
+     * @return array
      */
     public function call($method, $params, $id = 0)
     {
