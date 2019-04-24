@@ -35,6 +35,11 @@ class JsonRpcTcpClient
     public $timeout;
 
     /**
+     * @var string
+     */
+    protected static $eof = "\r\n";
+
+    /**
      * 使用静态方法创建实例
      * @param $host
      * @param $port
@@ -85,7 +90,7 @@ class JsonRpcTcpClient
                 'method' => $method,
                 'params' => $params,
                 'id'     => $id,
-            ]) . "\r\n");
+            ]) . static::$eof);
         if ($ret === false) {
             throw new WriteException('JsonRPC tcp client write failed.');
         }
