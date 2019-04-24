@@ -2,7 +2,7 @@
 
 namespace Mix\JsonRpc\Client\Coroutine;
 
-use Mix\Core\Coroutine;
+use Mix\Pool\ConnectionTrait;
 
 /**
  * Class JsonRpcTcpClient
@@ -12,13 +12,6 @@ use Mix\Core\Coroutine;
 class JsonRpcTcpClient extends \Mix\JsonRpc\Client\JsonRpcTcpClient
 {
 
-    /**
-     * 初始化事件
-     */
-    public function onInitialize()
-    {
-        // 启用协程钩子
-        Coroutine::enableHook();
-    }
+    use ConnectionTrait;
 
 }

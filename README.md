@@ -84,10 +84,26 @@ list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
         ],
     ],
 ],
+
 // 连接池拨号
 [
     // 类路径
     'class' => Common\Libraries\Dialers\JsonRpcTcpClientDialer::class,
+],
+
+// JsonRpc客户端
+[
+    // 类路径
+    'class'      => Mix\JsonRpc\Client\Coroutine\JsonRpcTcpClient::class,
+    // 属性
+    'properties' => [
+        // 地址
+        'host'    => '127.0.0.1',
+        // 端口
+        'port'    => 9503,
+        // 超时
+        'timeout' => 5,
+    ],
 ],
 ```
 
@@ -109,7 +125,7 @@ list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
 @property \Mix\JsonRpc\Client\Pool\ConnectionPool $rpcPool
 ```
 
-新增拨号类：
+新增一个拨号类：
 
 ```
 applications\common\src\Libraries\Dialers\JsonRpcTcpClientDialer.php
@@ -146,12 +162,29 @@ class JsonRpcTcpClientDialer implements DialerInterface
 代码中使用 JsonRpcTcpClient 池：
 
 ```
-$rpc     = app()->rpcPool->getConnection();
-$method = 'hello.world';
-$params = [];
-$id     = 0;
-$ret    = $rpc->call($method, $params, $id);
-$rpc->release(); // 不手动释放的连接不会归还连接池，会在析构时丢弃
+$chan1 = new \Mix\Core\Coroutine\Channel();
+xgo(function () use ($chan1) {
+    $rpc     = app()->rpcPool->getConnection();
+    $method = 'hello.world';
+    $params = [];
+    $id     = 0;
+    $ret    = $rpc->call($method, $params, $id);
+    $rpc->release(); // 不手动释放的连接不会归还连接池，会在析构时丢弃
+    $chan1->push($ret);
+});
+$chan2 = new \Mix\Core\Coroutine\Channel();
+xgo(function () use ($chan2) {
+    $rpc     = app()->rpcPool->getConnection();
+    $method = 'hello.world';
+    $params = [];
+    $id     = 0;
+    $ret    = $rpc->call($method, $params, $id);
+    $rpc->release(); // 不手动释放的连接不会归还连接池，会在析构时丢弃
+    $chan2->push($ret);
+});
+list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
+return json_encode([$ret1, $ret2]);
+// 可对两次请求的结果做计算并发送给客户端
 ```
 
 ## License
