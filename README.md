@@ -80,7 +80,7 @@ list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
         // 拨号器
         'dialer'    => [
             // 依赖引用
-            'ref' => beanname(Common\Libraries\Dialers\DatabaseDialer::class),
+            'ref' => beanname(Common\Libraries\Dialers\JsonRpcTcpClientDialer::class),
         ],
     ],
 ],
@@ -109,7 +109,7 @@ list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
 @property \Mix\JsonRpc\Client\Pool\ConnectionPool $rpcPool
 ```
 
-新增一个拨号类：
+新增拨号类：
 
 ```
 applications\common\src\Libraries\Dialers\JsonRpcTcpClientDialer.php
