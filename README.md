@@ -13,7 +13,7 @@ composer require mix/jsonrpc-client
 在 TP/Yii/Laravel 等传统框架也可使用。
 
 ```
-$client = \Mix\JsonRpc\Client\JsonRpcTcpClient::new('192.168.1.211', 9504);
+$client = \Mix\JsonRpc\Client\JsonRpcTcpClient::new('192.168.1.211', 9503);
 $method = 'hello.world';
 $params = [];
 $id     = 0;
@@ -28,7 +28,7 @@ var_dump($ret);
 ```
 $chan1 = new \Mix\Core\Coroutine\Channel();
 xgo(function () use ($chan1) {
-    $client = \Mix\JsonRpc\Client\Coroutine\JsonRpcTcpClient::new('192.168.1.211', 9504);
+    $client = \Mix\JsonRpc\Client\Coroutine\JsonRpcTcpClient::new('192.168.1.211', 9503);
     $method = 'hello.world';
     $params = [];
     $id     = 0;
@@ -37,7 +37,7 @@ xgo(function () use ($chan1) {
 });
 $chan2 = new \Mix\Core\Coroutine\Channel();
 xgo(function () use ($chan2) {
-    $client = \Mix\JsonRpc\Client\Coroutine\JsonRpcTcpClient::new('192.168.1.211', 9504);
+    $client = \Mix\JsonRpc\Client\Coroutine\JsonRpcTcpClient::new('192.168.1.211', 9503);
     $method = 'hello.world';
     $params = [];
     $id     = 0;
