@@ -64,9 +64,9 @@ class JsonRpcTcpClient
      */
     protected function connect()
     {
-        $fp = fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
+        $fp = stream_socket_client("tcp://{$this->host}:{$this->port}", $errno, $errstr, $this->timeout);
         if (!$fp) {
-            throw new ConnectionException("JsonRpcTcpClient connection failed, [$errno] {$errstr}");
+            throw new ConnectionException("JsonRPC tcp client connection failed, [$errno] {$errstr}");
         }
         $this->connection = $fp;
         return true;
@@ -85,14 +85,14 @@ class JsonRpcTcpClient
                 'method' => $method,
                 'params' => $params,
                 'id'     => $id,
-            ]) . "\n");
+            ]) . "\r\n");
         if ($ret === false) {
-            throw new WriteException('JsonRpcTcpClient write failed.');
+            throw new WriteException('JsonRPC tcp client write failed.');
         }
         stream_set_timeout($this->connection, $this->timeout);
         $line = fgets($this->connection);
         if ($line === false) {
-            throw new ReadException('JsonRpcTcpClient read failed.');
+            throw new ReadException('JsonRPC tcp client read failed.');
         }
         return json_decode($line, true);
     }
