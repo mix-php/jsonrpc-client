@@ -13,15 +13,12 @@ class JsonRpcTcpClient extends \Mix\JsonRpc\Client\JsonRpcTcpClient
 {
 
     /**
-     * JsonRpcTcpClient constructor.
-     * @param $host
-     * @param $port
-     * @param int $timeout
+     * 初始化事件
      */
-    public function __construct($host, $port, $timeout = 5)
+    public function onInitialize()
     {
-        Coroutine::enableHook(); // 启用协程钩子
-        parent::__construct($host, $port, $timeout);
+        // 启用协程钩子
+        Coroutine::enableHook();
     }
 
 }
