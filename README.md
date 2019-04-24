@@ -26,27 +26,24 @@ var_dump($ret);
 在 Mix PHP 中使用，可并行获取多个请求结果，性能是传统框架的同步方式无法比拟的。
 
 ```
-$chan = new \Mix\Core\Coroutine\Channel();
-xgo(function () use ($chan) {
+$chan1 = new \Mix\Core\Coroutine\Channel();
+xgo(function () use ($chan1) {
     $client = \Mix\JsonRpc\Client\Coroutine\JsonRpcTcpClient::new('192.168.1.211', 9504);
     $method = 'hello.world';
     $params = [];
     $id     = 0;
     $ret    = $client->call($method, $params, $id);
-    $chan->push($ret);
+    $chan1->push($ret);
 });
-xgo(function () use ($chan) {
+$chan2 = new \Mix\Core\Coroutine\Channel();
+xgo(function () use ($chan2) {
     $client = \Mix\JsonRpc\Client\Coroutine\JsonRpcTcpClient::new('192.168.1.211', 9504);
     $method = 'hello.world';
     $params = [];
     $id     = 0;
     $ret    = $client->call($method, $params, $id);
-    $chan->push($ret);
+    $chan2->push($ret);
 });
-$ret = [];
-for ($i = 0; $i < 2; $i++) {
-    $ret[] = $chan->pop();
-}
-list($ret1, $ret2) = $ret;
+list($ret1, $ret2) = [$chan1->pop(), $chan2->pop()];
 // 可对两次请求的结果做计算并发送给客户端
 ```

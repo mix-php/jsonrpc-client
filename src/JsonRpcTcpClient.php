@@ -102,4 +102,12 @@ class JsonRpcTcpClient
         return json_decode($line, true);
     }
 
+    /**
+     * 析构
+     */
+    public function __destruct()
+    {
+        fclose($this->connection);
+    }
+
 }
