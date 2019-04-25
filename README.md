@@ -1,4 +1,4 @@
-## JsonRpcTcpClient
+## JsonRpc Client
 
 Mix PHP 本身提供了基于 TCP 协议的 RPC 服务器开发，这里是 RPC 的客户端，负责与服务器通信。
 
